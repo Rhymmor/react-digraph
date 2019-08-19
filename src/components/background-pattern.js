@@ -21,16 +21,18 @@ import Circle from './circle';
 type IBackgroundPatternProps = {
   gridSpacing?: number,
   gridDotSize?: number,
+  graphId?: string,
 };
 
 class BackgroundPattern extends React.Component<IBackgroundPatternProps> {
   render() {
-    const { gridSpacing, gridDotSize } = this.props;
+    const { gridSpacing, gridDotSize, graphId } = this.props;
+    const id = graphId ? `grid-${graphId}` : 'grid';
 
     return (
       <pattern
-        id="grid"
-        key="grid"
+        id={id}
+        key={id}
         width={gridSpacing}
         height={gridSpacing}
         patternUnits="userSpaceOnUse"

@@ -28,6 +28,7 @@ type IDefsProps = {
   nodeSubtypes: any,
   edgeTypes: any,
   renderDefs?: () => any | null,
+  graphId?: string,
 };
 
 type IDefsState = {
@@ -74,7 +75,7 @@ class Defs extends React.Component<IDefsProps, IDefsState> {
   }
 
   render() {
-    const { edgeArrowSize, gridSpacing, gridDotSize } = this.props;
+    const { edgeArrowSize, gridSpacing, gridDotSize, graphId } = this.props;
 
     return (
       <defs>
@@ -85,6 +86,7 @@ class Defs extends React.Component<IDefsProps, IDefsState> {
         <BackgroundPattern
           gridSpacing={gridSpacing}
           gridDotSize={gridDotSize}
+          graphId={graphId}
         />
 
         <DropshadowFilter />

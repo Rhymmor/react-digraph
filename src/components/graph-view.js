@@ -1430,6 +1430,14 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
     }
   };
 
+  getControlsId = () => {
+    const { graphId } = this.props;
+
+    return (
+      'react-digraph-graph-controls-wrapper' + (graphId ? `-${graphId}` : '')
+    );
+  };
+
   /*
    * GraphControls is a special child component. To maximize responsiveness we disable
    * rendering on zoom level changes, but this component still needs to update.
@@ -1445,7 +1453,7 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
     }
 
     const graphControlsWrapper = this.viewWrapper.current.ownerDocument.getElementById(
-      'react-digraph-graph-controls-wrapper'
+      this.getControlsId()
     );
 
     if (!graphControlsWrapper) {
@@ -1465,6 +1473,16 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
     );
   }
 
+  getBackgroundId = () => {
+    const { backgroundFillId, graphId } = this.props;
+
+    if (backgroundFillId) {
+      return backgroundFillId;
+    }
+
+    return graphId ? `#grid-${graphId}` : undefined;
+  };
+
   render() {
     const {
       edgeArrowSize,
@@ -1475,8 +1493,8 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
       edgeTypes,
       renderDefs,
       gridSize,
-      backgroundFillId,
       renderBackground,
+      graphId,
     } = this.props;
 
     return (
@@ -1490,21 +1508,19 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
             nodeSubtypes={nodeSubtypes}
             edgeTypes={edgeTypes}
             renderDefs={renderDefs}
+            graphId={graphId}
           />
           <g className="view" ref={el => (this.view = el)}>
             <Background
               gridSize={gridSize}
-              backgroundFillId={backgroundFillId}
+              backgroundFillId={this.getBackgroundId()}
               renderBackground={renderBackground}
             />
 
             <g className="entities" ref={el => (this.entities = el)} />
           </g>
         </svg>
-        <div
-          id="react-digraph-graph-controls-wrapper"
-          className="graph-controls-wrapper"
-        />
+        <div id={this.getControlsId()} className="graph-controls-wrapper" />
       </div>
     );
   }
