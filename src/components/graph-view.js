@@ -1265,9 +1265,10 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
     }
 
     const containerId = `${id}-container`;
-    let nodeContainer: HTMLElement | Element | null = document.getElementById(
-      containerId
-    );
+    let nodeContainer:
+      | HTMLElement
+      | Element
+      | null = this.entities.querySelector(`#${containerId}`);
 
     if (!nodeContainer) {
       nodeContainer = document.createElementNS(
@@ -1348,14 +1349,16 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
     const customContainerId = `${id}-custom-container`;
     const { draggedEdge } = this.state;
     const { afterRenderEdge } = this.props;
-    let edgeContainer = document.getElementById(containerId);
+    let edgeContainer = this.entities.querySelector(`#${containerId}`);
 
     if (nodeMoving && edgeContainer) {
       edgeContainer.style.display = 'none';
       containerId = `${id}-custom-container`;
-      edgeContainer = document.getElementById(containerId);
+      edgeContainer = this.entities.querySelector(`#${containerId}`);
     } else if (edgeContainer) {
-      const customContainer = document.getElementById(customContainerId);
+      const customContainer = this.entities.querySelector(
+        `#${customContainerId}`
+      );
 
       edgeContainer.style.display = '';
 
