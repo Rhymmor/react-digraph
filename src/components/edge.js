@@ -416,7 +416,8 @@ class Edge extends React.Component<IEdgeProps> {
     // Note: document.getElementById is by far the fastest way to get a node.
     // compare 2.82ms for querySelector('#node-a2 use.node') vs
     // 0.31ms and 99us for document.getElementById()
-    const nodeElem = document.getElementById(`node-${trg[nodeKey]}`);
+    // const nodeElem = document.getElementById(`node-${trg[nodeKey]}`);
+    const nodeElem = viewWrapperElem.querySelector(`#node-${trg[nodeKey]}`);
 
     if (!nodeElem) {
       return response;

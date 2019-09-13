@@ -390,7 +390,10 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
       // remove node
       // The timeout avoids a race condition
       setTimeout(() => {
-        GraphUtils.removeElementFromDom(`node-${nodeId}-container`);
+        GraphUtils.removeElementFromDom(
+          `node-${nodeId}-container`,
+          this.entities
+        );
       });
     }
   }
@@ -451,7 +454,7 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
   removeEdgeElement(source: string, target: string) {
     const id = `${source}-${target}`;
 
-    GraphUtils.removeElementFromDom(`edge-${id}-container`);
+    GraphUtils.removeElementFromDom(`edge-${id}-container`, this.entities);
   }
 
   canSwap(sourceNode: INode, hoveredNode: INode | null, swapEdge: any) {
@@ -477,7 +480,7 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
     });
 
     // remove from UI
-    GraphUtils.removeElementFromDom(`node-${nodeId}-container`);
+    GraphUtils.removeElementFromDom(`node-${nodeId}-container`, this.entities);
 
     // inform consumer
     this.props.onSelectNode(null);
@@ -511,10 +514,12 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
     if (selectedEdge.source && selectedEdge.target) {
       // remove extra custom containers just in case.
       GraphUtils.removeElementFromDom(
-        `edge-${selectedEdge.source}-${selectedEdge.target}-custom-container`
+        `edge-${selectedEdge.source}-${selectedEdge.target}-custom-container`,
+        this.entities
       );
       GraphUtils.removeElementFromDom(
-        `edge-${selectedEdge.source}-${selectedEdge.target}-container`
+        `edge-${selectedEdge.source}-${selectedEdge.target}-container`,
+        this.entities
       );
     }
 
@@ -729,7 +734,7 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
       return;
     }
 
-    GraphUtils.removeElementFromDom('edge-custom-container');
+    GraphUtils.removeElementFromDom('edge-custom-container', this.entities);
 
     if (edgeEndNode) {
       const mapId1 = `${hoveredNodeData[nodeKey]}_${edgeEndNode[nodeKey]}`;
@@ -973,7 +978,9 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
       nodeSize,
       (this.getNodeById(draggedEdge.source): any).node,
       targetPosition,
-      nodeKey
+      nodeKey,
+      undefined,
+      this.viewWrapper.current
     );
 
     targetPosition.x += off.xOff;
@@ -1036,7 +1043,7 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
     const draggedEdgeCopy = { ...this.state.draggedEdge };
 
     // remove custom edge
-    GraphUtils.removeElementFromDom('edge-custom-container');
+    GraphUtils.removeElementFromDom('edge-custom-container', this.entities);
     this.setState(
       {
         draggedEdge: null,
