@@ -88,4 +88,5 @@ export type IGraphViewProps = {
   centerNodeOnMove?: boolean,
   initialBBox: IBBox,
   graphId?: string,
+  wheelZoom?: boolean,
 };

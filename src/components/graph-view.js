@@ -79,6 +79,7 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
     zoomDur: 750,
     rotateEdgeHandle: true,
     centerNodeOnMove: true,
+    wheelZoom: true,
   };
 
   static getDerivedStateFromProps(
@@ -185,7 +186,7 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
   }
 
   componentDidMount() {
-    const { initialBBox, zoomDelay, minZoom, maxZoom } = this.props;
+    const { initialBBox, zoomDelay, minZoom, maxZoom, wheelZoom } = this.props;
 
     // TODO: can we target the element rather than the document?
     document.addEventListener('keydown', this.handleWrapperKeydown);
@@ -199,12 +200,17 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
       .on('zoom', this.handleZoom)
       .on('end', this.handleZoomEnd);
 
-    d3.select(this.viewWrapper.current)
+    const selection = d3
+      .select(this.viewWrapper.current)
       .on('touchstart', this.containZoom)
       .on('touchmove', this.containZoom)
       .on('click', this.handleSvgClicked) // handle element click in the element components
       .select('svg')
       .call(this.zoom);
+
+    if (!wheelZoom) {
+      selection.on('wheel.zoom', null);
+    }
 
     this.selectedView = d3.select(this.view);
 
