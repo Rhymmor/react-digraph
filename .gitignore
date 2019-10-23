@@ -1,7 +1,9 @@
 coverage/
 node_modules/
 dist/hot
-dist/
+# temporary fix for installing from git
+dist/*
+!dist/main.min.js
 
 # temporary jenkins files
 test/test.js.tap
