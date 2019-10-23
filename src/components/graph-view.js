@@ -306,10 +306,14 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
     });
   }
 
+  getNodeKey(id: string) {
+    return `key-${id || ''}`;
+  }
+
   getNodeById(id: string | null, nodesMap: any | null): INodeMapNode | null {
     const nodesMapVar = nodesMap || this.state.nodesMap;
 
-    return nodesMapVar ? nodesMapVar[`key-${id || ''}`] : null;
+    return nodesMapVar ? nodesMapVar[this.getNodeKey(id)] : null;
   }
 
   getEdgeBySourceTarget(source: string, target: string): IEdge | null {
@@ -338,20 +342,28 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
     const nodeKey = this.props.nodeKey;
     let node = null;
     let prevNode = null;
+    const removedNodeKeys = Object.keys(oldNodesMap);
 
     GraphUtils.yieldingLoop(nodes.length, 50, i => {
       node = nodes[i];
-      prevNode = this.getNodeById(node[nodeKey], oldNodesMap);
+      const id = node[nodeKey];
+
+      prevNode = this.getNodeById(id, oldNodesMap);
+
+      const existingNodeIdx = removedNodeKeys.indexOf(this.getNodeKey(id));
+
+      if (existingNodeIdx !== -1) {
+        removedNodeKeys.splice(existingNodeIdx, 1);
+      }
 
       // if there was a previous node and it changed
       if (
         prevNode != null &&
         (!GraphUtils.isEqual(prevNode.node, node) ||
           (selectedNode.node !== prevSelectedNode.node &&
-            ((selectedNode.node &&
-              node[nodeKey] === selectedNode.node[nodeKey]) ||
+            ((selectedNode.node && id === selectedNode.node[nodeKey]) ||
               (prevSelectedNode.node &&
-                node[nodeKey] === prevSelectedNode.node[nodeKey]))))
+                id === prevSelectedNode.node[nodeKey]))))
       ) {
         // Updated node
         this.asyncRenderNode(node);
@@ -359,6 +371,15 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
         // New node
         this.asyncRenderNode(node);
       }
+    });
+
+    GraphUtils.yieldingLoop(removedNodeKeys.length, 50, i => {
+      const removedNodeKey = removedNodeKeys[i];
+      const removedNode = oldNodesMap[removedNodeKey];
+
+      cancelAnimationFrame(
+        this.nodeTimeouts[this.getNodeTimeoutId(removedNode.node[nodeKey])]
+      );
     });
   }
 
@@ -1249,9 +1270,13 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
     });
   };
 
+  getNodeTimeoutId(nodeId: string) {
+    return `nodes-${nodeId}`;
+  }
+
   asyncRenderNode(node: INode) {
     const nodeKey = this.props.nodeKey;
-    const timeoutId = `nodes-${node[nodeKey]}`;
+    const timeoutId = this.getNodeTimeoutId(node[nodeKey]);
 
     cancelAnimationFrame(this.nodeTimeouts[timeoutId]);
     this.nodeTimeouts[timeoutId] = requestAnimationFrame(() => {
