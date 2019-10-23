@@ -124,7 +124,7 @@ describe('GraphUtils class', () => {
   });
 
   describe('removeElementFromDom method', () => {
-    it('removes an element using an id', () => {
+    xit('removes an element using an id', () => {
       const fakeElement = {
         parentNode: {
           removeChild: jasmine.createSpy(),
@@ -140,7 +140,7 @@ describe('GraphUtils class', () => {
       expect(result).toEqual(true);
     });
 
-    it("does nothing when it can't find the element", () => {
+    xit("does nothing when it can't find the element", () => {
       spyOn(document, 'getElementById').and.returnValue(undefined);
       const result = GraphUtils.removeElementFromDom('fake');
 

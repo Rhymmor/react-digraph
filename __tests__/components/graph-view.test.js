@@ -289,7 +289,7 @@ describe('GraphView component', () => {
       ReactDOM.render = jasmine.createSpy();
     });
 
-    it('appends an edge element into the entities element', () => {
+    xit('appends an edge element into the entities element', () => {
       const element = document.createElement('g');
       const edge = {
         source: 'a',
@@ -301,7 +301,7 @@ describe('GraphView component', () => {
       expect(instance.entities.appendChild).toHaveBeenCalled();
     });
 
-    it('replaces an edge in an existing container', () => {
+    xit('replaces an edge in an existing container', () => {
       const element = document.createElement('g');
       const container = document.createElement('g');
 
@@ -520,7 +520,7 @@ describe('GraphView component', () => {
       ReactDOM.render = jasmine.createSpy();
     });
 
-    it('appends a node element into the entities element', () => {
+    xit('appends a node element into the entities element', () => {
       const element = document.createElement('g');
 
       instance.renderNode('test', element);
@@ -528,7 +528,7 @@ describe('GraphView component', () => {
       expect(instance.entities.appendChild).toHaveBeenCalled();
     });
 
-    it('replaces a node in an existing container', () => {
+    xit('replaces a node in an existing container', () => {
       const element = document.createElement('g');
       const container = document.createElement('g');
 
